@@ -1,0 +1,1 @@
+const pulseSvg = 'assets/svg/1375322.svg';
