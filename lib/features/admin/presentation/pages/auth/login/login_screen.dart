@@ -1,8 +1,13 @@
+import 'package:afya_admin/features/admin/presentation/manager/auth/login_provider.dart';
+import 'package:afya_admin/features/admin/presentation/pages/auth/register/register_screen.dart';
 import 'package:afya_admin/features/admin/presentation/widgets/text_form_widget.dart';
 import 'package:afya_admin/utils/colors.dart';
 import 'package:afya_admin/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../../../main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -14,6 +19,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
+    final watcher = context.watch<LoginProvider>();
+    final reader = context.read<LoginProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -34,12 +41,17 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               24.height,
               const TextFormWidget(
+                textInputAction: TextInputAction.next,
                 prefixIcon: LineIcons.user,
-                hint: usernameHintText,
+                hint: usernameOrPhoneHintText,
               ),
               12.height,
-              const TextFormWidget(
+              TextFormWidget(
+                textInputAction: TextInputAction.done,
+                keyboardType: TextInputType.visiblePassword,
                 isPassword: true,
+                showPassword: watcher.showPassword,
+                onPasswordVisibilityToggle: () => reader.togglePasswordVisibility(),
               ),
               12.height,
               Container(
@@ -68,7 +80,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text(
                     loginButtonText,
                     style: primaryTextStyle(color: colorOnPrimary),
-                  )).withSize(width: context.width(), height: 45)
+                  )).withSize(width: context.width(), height: 45),
+              if(isPatient)
+              18.height,
+              if(isPatient)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(loginScreenRegisterMsg),
+                  TextButton(
+                    onPressed: () => const RegisterScreen().launch(context, pageRouteAnimation: PageRouteAnimation.Slide),
+                    child: const Text(registerTitleText),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
